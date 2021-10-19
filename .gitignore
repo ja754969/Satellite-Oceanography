@@ -1,1 +1,9 @@
+# MATLAB
 *.asv
+
+
+# Compressed file
+*.bz2
+
+# Large file : More than 50 MB
+WH/L3/AQUA_MODIS.20210922.L3b.DAY.SST.NRT.nc
