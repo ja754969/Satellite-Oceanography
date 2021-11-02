@@ -5,5 +5,16 @@
 # Compressed file
 *.bz2
 
+# folder
+WH/L2/test_14_image/
+
 # Large file : More than 50 MB
 WH/L3/AQUA_MODIS.20210922.L3b.DAY.SST.NRT.nc
+hw2/20211019_dataset-duacs-nrt-global-merged-allsat-phy-l4_1635306949167.nc
+
+# Compressed file
+*.zip
+
+
+# image
+*.tif

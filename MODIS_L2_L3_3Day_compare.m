@@ -116,21 +116,21 @@ end
 sst_3d_mean = mean(sst_3d,3,'omitnan');
 figure
 m_proj('miller','lon',[LONGLIM1(1) LONGLIM1(end)],'lat',[LATLIM1(1) LATLIM1(end)]); % 繪製海面(白色)
-    %----------------------------------------------------------------------
-    m_pcolor(LONG,LAT,sst_3d_mean);shading flat
+%----------------------------------------------------------------------
+m_pcolor(LONG,LAT,sst_3d_mean);shading flat
 %     pcolor(LONG,LAT,sst_3d_mean);shading flat
-    colormap('jet')
-    caxis([28 32])
-    h = colorbar;
-    m_gshhs_h('patch',[0.7 0.7 0.7],'edgecolor','k');    % 繪製陸地
-    m_grid('linewi',1,'linestyle',':','tickdir','in','gridcolor','k',...
-            'xtick',LONGLIM1,'ytick',LATLIM1,'fontsize',10,'fontweight','bold',...
-            'XaxisLocation','bottom','YaxisLocation','left','box','fancy');
-    cd(currentFolder)
-    if isempty(ls(image_folder)) == 1
-        mkdir(image_folder)
-    end
-    cd(['./' image_folder])
+colormap('jet')
+caxis([28 32])
+h = colorbar;
+m_gshhs_h('patch',[0.7 0.7 0.7],'edgecolor','k');    % 繪製陸地
+m_grid('linewi',1,'linestyle',':','tickdir','in','gridcolor','k',...
+        'xtick',LONGLIM1,'ytick',LATLIM1,'fontsize',10,'fontweight','bold',...
+        'XaxisLocation','bottom','YaxisLocation','left','box','fancy');
+cd(currentFolder)
+if isempty(ls(image_folder)) == 1
+    mkdir(image_folder)
+end
+cd(['./' image_folder])
 
-    title('L2_3-day_mean (2021/9/22~2021/9/24)','Interpreter','none')
-    print('L2_3-day_mean','-dpng')
+title('L2_3-day_mean (2021/9/22~2021/9/24)','Interpreter','none')
+print('L2_3-day_mean','-dpng')
