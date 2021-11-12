@@ -11,6 +11,11 @@ WH/L2/test_14_image/
 # Large file : More than 50 MB
 WH/L3/AQUA_MODIS.20210922.L3b.DAY.SST.NRT.nc
 hw2/20211019_dataset-duacs-nrt-global-merged-allsat-phy-l4_1635306949167.nc
+hw3_argo_eddy/nc_file_DataSelection_20211109_071511_12958017/
+hw3_argo_eddy/csv_file_DataSelection_20200528_014158_9991089/
+hw4_eddy_sst_chl-a/A*L*.nc
+hw4_eddy_sst_chl-a/T*L*.nc
+hw4_eddy_sst_chl-a/*MODIS*.nc
 
 # Compressed file
 *.zip
