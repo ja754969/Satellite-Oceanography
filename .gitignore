@@ -1,3 +1,4 @@
+# find ./* -size +100M | cat >> .gitignore
 # MATLAB
 *.asv
 
@@ -8,18 +9,23 @@
 # folder
 WH/L2/test_14_image/
 
-# Large file : More than 50 MB
-WH/L3/AQUA_MODIS.20210922.L3b.DAY.SST.NRT.nc
-hw2/20211019_dataset-duacs-nrt-global-merged-allsat-phy-l4_1635306949167.nc
-hw3_argo_eddy/nc_file_DataSelection_20211109_071511_12958017/
-hw3_argo_eddy/csv_file_DataSelection_20200528_014158_9991089/
-hw4_eddy_sst_chl-a/A*L*.nc
-hw4_eddy_sst_chl-a/T*L*.nc
-hw4_eddy_sst_chl-a/*MODIS*.nc
-
 # Compressed file
 *.zip
 
 
 # image
 *.tif
+
+# Document
+*.docx
+
+# Large file : More than 50 MB (in the shell : "find * -size +100M | cat >> .gitignore")
+WH/L0/MOD00.P2021265.0450_1.PDS.bz2
+WH/L1A/A2021265045000.L1A_LAC.bz2
+WH/L3/AQUA_MODIS.20210922.L3b.DAY.SST.NRT.nc
+etopo1_ice_g_i2.zip
+hw2/20211019_dataset-duacs-nrt-global-merged-allsat-phy-l4_1635306949167.nc
+hw4_eddy_sst_chl-a/T2005027053000.L2_LAC_OC.nc
+mid-term/image.tif
+mid-term/T2005027053000.L2_LAC_OC.nc
+mid-term/u_and_v_compare.tif
