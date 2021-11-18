@@ -17,7 +17,7 @@ WH/L2/test_14_image/
 *.tif
 
 # Document
-*.docx
+*.doc
 
 # Large file : More than 50 MB (in the shell : "find * -size +100M | cat >> .gitignore")
 WH/L0/MOD00.P2021265.0450_1.PDS.bz2
