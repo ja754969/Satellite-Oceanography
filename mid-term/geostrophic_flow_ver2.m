@@ -34,39 +34,20 @@ lat = nc_varget(file_chl,'/navigation_data/latitude');
 lon = nc_varget(file_chl,'/navigation_data/longitude');
 chlorophyll_concentration  = nc_varget(file_chl,'/geophysical_data/chlor_a');
 %% Read data
-adt_cal = AVISO_200501_adt;
-adt_cal(find(adt_cal<0))=NaN;
-AVISO_200501_lat_cal = AVISO_200501_lat;
-%% variables
-delta_sigma = acos(sind(43)*sind(42)+cosd(43)*cosd(42)*cosd(0)); % radians : the central angle between them
-lat_distance = delta_sigma*6400; % km : distance between two continous latitude
-% the actual arc length d on a sphere of radius r
-dx = 0.25*lat_distance*1000; % [(resolution)*(degree_length, unit is km)*(1 km)]
-dy = 0.25*lat_distance*1000; % [(resolution)*(degree_length, unit is km)*(1 km)]
-%% Calculate the gradient of adt in x and y-dir
-% n x k data → (n-1) x (k-1) data
-% y-dir : latitude is arranged from small to large and going right.
-dhdy = (adt_cal(:,2:end)-adt_cal(:,1:end-1))/dy; %% size: (n)x(k-1)
-% ADT gradient along y direction (meridional).
-
-% x-dir : longitude is arranged from small to large and going down.
-dhdx = (adt_cal(2:end,:)-adt_cal(1:end-1,:))/dx; %% size: (n-1)x(k)
-% ADT gradient along x direction (zonal).% x 方向(經度方向)的絕對動力高度(ADT)梯度
-
-% Delete the rest of the data to match the dimension
-dhdy = dhdy(2:end,:); %% change size to: (n-1) x (k-1)
-dhdx = dhdx(:,2:end); %% change size to: (n-1) x (k-1)
+adt = AVISO_200501_adt;
+adt(find(adt<0))=NaN;
+% spheroid = referenceEllipsoid(wgs84Ellipsoid);
+[aspect,slope,gradN,gradE] = gradientm(AVISO_200501_lat,AVISO_200501_lon,AVISO_200501_adt);
 %% Set Parameters : Angular speed of Earth's rotation(Omega)、f = 2Ωsin(Φ)
 % 23 hr 56 min = 86160 sec
-omega = 2*pi/86160; % 地球角速度(Omega)
+omega = 2*pi/(86160); % 地球角速度(Omega)
 % omega = (2 x pi)/T = 2 x 3.14/86160 = 7.29 x 10^-5 (s^-1)
 g = 9.8;
-f = 2*omega*sind(AVISO_200501_lat_cal(2:end,2:end)); %% size : (n-1) x (k-1)
+f = 2*omega*sind(AVISO_200501_lat); %% size : (n-1) x (k-1)
 %%  Calculate velocities and speeds (ADT current velocity)
-estimated_v = g * dhdx./f;   % v 方向的地轉流速
-estimated_u = - g * dhdy./f; % u 方向的地轉流速
+estimated_v = g * gradE./f;   % v 方向的地轉流速
+estimated_u = - g * gradN./f; % u 方向的地轉流速
 spd = sqrt(estimated_u.^2 + estimated_v.^2);
-avg_spd = nanmean(reshape(spd,size(dhdy,1)*size(dhdy,2),1));
 %%
 fig = figure;
 fig.PaperUnits = 'centimeters';
@@ -109,11 +90,11 @@ colormap(ax2,reshape(RGB1(10,:,:),size(RGB1,2),3));
 %---imread colormap---%
 c1.Label.String = 'temperature (^oC)';
 hold on;
-m_quiver(AVISO_200501_lon(2:end,2:end),AVISO_200501_lat(2:end,2:end),...
+m_quiver(AVISO_200501_lon,AVISO_200501_lat,...
     estimated_u,estimated_v,'k');
 hold on;
-m_contour(AVISO_200501_lon(2:end,2:end),AVISO_200501_lat(2:end,2:end),...
-    AVISO_200501_sla(2:end,2:end),'k','ShowText','on');
+m_contour(AVISO_200501_lon,AVISO_200501_lat,...
+    AVISO_200501_sla,'k','ShowText','on');
 m_gshhs_i('patch',[.7 .7 .7],'linewidth',0.5);
 m_grid('tickdir','in','xtick',LON_lim,'ytick',LAT_lim,'fontsize',15)
 title('2005-01-27 SST (estimated geostrophic current)')
@@ -155,11 +136,11 @@ c2.Label.String = 'concentration (mg/m^3)';
 colorbar_tick_label = [0.2,0.3,0.4,0.6,0.8,1,1.2];
 set(c2,'ytick',log10(colorbar_tick_label),'yticklabel',colorbar_tick_label,'tickdir','out');
 hold on;
-m_quiver(AVISO_200501_lon(2:end,2:end),AVISO_200501_lat(2:end,2:end),...
+m_quiver(AVISO_200501_lon,AVISO_200501_lat,...
     estimated_u,estimated_v,'k');
 hold on;
-m_contour(AVISO_200501_lon(2:end,2:end),AVISO_200501_lat(2:end,2:end),...
-    AVISO_200501_sla(2:end,2:end),'k','ShowText','on');
+m_contour(AVISO_200501_lon,AVISO_200501_lat,...
+    AVISO_200501_sla,'k','ShowText','on');
 m_gshhs_i('patch',[.7 .7 .7],'linewidth',0.5);
 m_grid('tickdir','in','xtick',LON_lim,'ytick',LAT_lim,'fontsize',15)
 title('2005-01-27 CHL-a (estimated geostrophic current)')
@@ -168,8 +149,8 @@ ax4.FontSize = 15;
 print('image','-dtiffn','-r300')
 print('image','-dpdf','-fillpage')
 %% Compare u and v
-u_diff = estimated_u - AVISO_200501_adt_u(2:end,2:end);
-v_diff = estimated_v - AVISO_200501_adt_v(2:end,2:end);
+u_diff = estimated_u - AVISO_200501_adt_u;
+v_diff = estimated_v - AVISO_200501_adt_v;
 fig_comp = figure;
 fig_comp.PaperUnits = 'centimeters';
 fig_comp.PaperSize = [29.7 21]; % A4 papersize (horizontal,21-by-29.7 cm,[width height])
@@ -180,7 +161,7 @@ ax1 = axes;
 ax1.Position= [0.01 0.25 0.45 0.45];
 m_proj('miller','lon',[LON_lim(1) LON_lim(end)],'lat',[LAT_lim(end) LAT_lim(1)],...
     'fontsize',40);
-m_pcolor(AVISO_200501_lon(2:end,2:end),AVISO_200501_lat(2:end,2:end),u_diff)
+m_pcolor(AVISO_200501_lon,AVISO_200501_lat,u_diff)
 c1 = colorbar('southoutside');
 %---imread colormap---%
 [X,cmap] = imread('cool-warm-d15.png');
@@ -195,7 +176,7 @@ title('2005-01-27 geostrophic current difference (u component)')
 ax2 = axes;
 ax2.Position= [0.52 0.25 0.45 0.45];
 m_proj('miller','lon',[LON_lim(1) LON_lim(end)],'lat',[LAT_lim(end) LAT_lim(1)]);
-m_pcolor(AVISO_200501_lon(2:end,2:end),AVISO_200501_lat(2:end,2:end),v_diff)
+m_pcolor(AVISO_200501_lon,AVISO_200501_lat,v_diff)
 % c2 = colorbar('southoutside');
 %---imread colormap---%
 colormap(ax2,reshape(RGB(10,:,:),size(RGB,2),3));
@@ -208,10 +189,6 @@ ax1.FontSize = 20;ax2.FontSize = 20;
 ax1.LineWidth = 2;ax2.LineWidth = 2;
 caxis(ax1,[-0.3 0.3])
 caxis(ax2,[-0.3 0.3])
-%% Timescale
-latitude_s = 43;
-T_sec = 2*pi/(2*2*pi/86400*sind(latitude_s)) % seconds
-T_hour = 2*pi/(2*2*pi/86400*sind(latitude_s))/60/60 % hours
 %% Output the figure
 print('u_and_v_compare','-dtiffn','-r300')
 print('u_and_v_compare','-dpdf','-fillpage')
@@ -228,7 +205,11 @@ m_proj('miller','lon',[LON_lim(1) LON_lim(end)],'lat',[LAT_lim(end) LAT_lim(1)],
     'fontsize',40);
 m_quiver(AVISO_200501_lon,AVISO_200501_lat,AVISO_200501_adt_u,AVISO_200501_adt_v,'k');
 hold on;
-m_quiver(AVISO_200501_lon(2:end,2:end),AVISO_200501_lat(2:end,2:end),estimated_u,estimated_v,'r');
+m_quiver(AVISO_200501_lon,AVISO_200501_lat,estimated_u,estimated_v,'r');
 m_gshhs_i('patch',[.7 .7 .7],'linewidth',0.5);
 m_grid('tickdir','in','xtick',LON_lim,'ytick',LAT_lim,'fontsize',15,'LineWidth',3)
 title('Difference of u and v component')
+%% Timescale
+latitude_s = 43;
+T_sec = 2*pi/(2*2*pi/86400*sind(latitude_s)) % seconds
+T_hour = 2*pi/(2*2*pi/86400*sind(latitude_s))/60/60 % hours

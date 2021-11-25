@@ -16,10 +16,11 @@ for i = 1:length(file_sst_all)
     lat = nc_varget(file_sst,'lat');
     lon = nc_varget(file_sst,'lon');
     
-    sea_surface_temperature(i,:,:) = nc_varget(file_sst,'sea_surface_temperature')-273.15;
-    sea_surface_temperature(pathfinder_quality_level<=3) = NaN;
-    sea_surface_temperature(quality_level<4) = NaN;
-    sea_surface_temperature(l2p_flags==64) = NaN;
+    sea_surface_temperature_NC = nc_varget(file_sst,'sea_surface_temperature')-273.15;
+    sea_surface_temperature_NC(pathfinder_quality_level<=3) = NaN;
+    sea_surface_temperature_NC(quality_level<4) = NaN;
+    sea_surface_temperature_NC(l2p_flags==64) = NaN;
+    sea_surface_temperature(i,:,:)=sea_surface_temperature_NC;
     fprintf([num2str(i) '/' num2str(length(file_sst_all)) '\n'])
 end
 %% 
@@ -40,7 +41,7 @@ colormap(reshape(RGB1(10,:,:),size(RGB1,2),3));
 %---imread colormap---%
 c1.Label.String = 'temperature (^oC)';
 m_gshhs_i('patch',[.7 .7 .7],'linewidth',0.5);
-m_grid('tickdir','in','xtick',LON_lim,'ytick',LAT_lim)
+m_grid('tickdir','in','xtick',LON_lim,'ytick',LAT_lim,'LineWidth',3)
 title('AVHRR SST')
 ax = gca;
 ax.LineWidth = 2;

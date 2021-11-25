@@ -1,4 +1,4 @@
-# find ./* -size +100M | cat >> .gitignore
+
 # MATLAB
 *.asv
 
@@ -19,7 +19,9 @@ WH/L2/test_14_image/
 # Document
 *.doc
 
-# Large file : More than 50 MB (in the shell : "find * -size +100M | cat >> .gitignore")
+# find ./* -size +100M | cat >> .gitignore
+# Large file : More than 50 MB (in the shell : "find * -size +50M | cat >> .gitignore")
+
 WH/L0/MOD00.P2021265.0450_1.PDS.bz2
 WH/L1A/A2021265045000.L1A_LAC.bz2
 WH/L3/AQUA_MODIS.20210922.L3b.DAY.SST.NRT.nc
