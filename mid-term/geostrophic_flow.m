@@ -57,9 +57,10 @@ dhdx = (adt_cal(2:end,:)-adt_cal(1:end-1,:))/dx; %% size: (n-1)x(k)
 dhdy = dhdy(2:end,:); %% change size to: (n-1) x (k-1)
 dhdx = dhdx(:,2:end); %% change size to: (n-1) x (k-1)
 %% Set Parameters : Angular speed of Earth's rotation(Omega)、f = 2Ωsin(Φ)
-% 23 hr 56 min = 86160 sec
-omega = 2*pi/86160; % 地球角速度(Omega)
-% omega = (2 x pi)/T = 2 x 3.14/86160 = 7.29 x 10^-5 (s^-1)
+% 1 sidereal day = rotation relative to the fixed stars
+% 23 hr 56 min 4 s = 86164 s
+omega = 2*pi/86164; % 地球角速度(Omega)
+% omega = (2 x pi)/T = 2 x 3.14/86164 = 7.29 x 10^-5 (s^-1)
 g = 9.8;
 f = 2*omega*sind(AVISO_200501_lat_cal(2:end,2:end)); %% size : (n-1) x (k-1)
 %%  Calculate velocities and speeds (ADT current velocity)

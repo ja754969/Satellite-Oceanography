@@ -20,15 +20,19 @@ m_proj('miller','lon',[118 123],'lat',[20 30]);
 % [CS,CH] = m_etopo2('contourf',100,'edgecolor','none');
 % [CS,CH] = m_etopo2('contour',[-100, -200, -500, -1000]); % countour
 % [CS,CH] = m_etopo2('contourf',[-7000:1000:-1000 -500 -200 0],'edgecolor','none');
-[CS,CH] = m_etopo2('shadedrelief'); % add shade on the relief
+% [CS,CH] = m_etopo2('shadedrelief'); % add shade on the relief
+[ELEV,LONG,LAT] = m_etopo2([118 123 20 30]); % [ELEV,LONG,LAT]=m_etopo2([LONG_MIN LONG_MAX LAT_MIN LAT_MAX])
+m_pcolor(LONG,LAT,ELEV)
 %% colormap
 % colormap = 'parula';
-colormap(m_colmap('jet',5)); 
+% colormap(m_colmap('jet',5));
+colormap(m_colmap('jet'));
 caxis([-1000 0])
 %% colorbar
 h = colorbar;
 % clabel(CS,CH,'LabelSpacing',1000) % set the interval of displayed label
 h.Position % [x,y,寬,長]
+hold on;
 %% MOdify the variables 'CS' and 'CH'
 % set(CH,'linecolor','r');
 % set(CH,'levelstep',100);
