@@ -2,7 +2,8 @@ clear;clc;close all
 %%
 % MODIS_Chl_file_name = 'T2003305.L3m_DAY_CHL_chlor_a_4km.nc';
 MODIS_Chl_file_name = 'S20031101.L3m_DAY_CHL_chlor_a_9km.nc';
-MODIS_Chl_file = ['./NASA_OceanColor_Data/' MODIS_Chl_file_name];
+MODIS_Chl_file = ['./SeaWiFS_CHL-A_Gulf-of-Aden_20031101/NASA_OceanColor_Data/' ...
+    MODIS_Chl_file_name];
 ncdisp(MODIS_Chl_file);
 time = datetime([MODIS_Chl_file_name(2:5) MODIS_Chl_file_name(6:7) ...
     MODIS_Chl_file_name(8:9)],'InputFormat','yyyyMMdd');
@@ -13,7 +14,8 @@ lon_1 = nc_varget(MODIS_Chl_file,'lon');
 % palette = nc_varget(MODIS_Chl_file,'palette');
 lon_1(lon_1<0) = lon_1(lon_1<0) + 360;
 %%
-SSH_file = './SSH_data/cmems_obs-sl_glo_phy-ssh_my_allsat-l4-duacs-0.25deg_P1D_20031101.nc';
+SSH_file = ['./SeaWiFS_CHL-A_Gulf-of-Aden_20031101/SSH_data/' ...
+    'cmems_obs-sl_glo_phy-ssh_my_allsat-l4-duacs-0.25deg_P1D_20031101.nc'];
 ncdisp(SSH_file)
 lon_SSH = nc_varget(SSH_file,'longitude');
 lat_SSH = nc_varget(SSH_file,'latitude');
